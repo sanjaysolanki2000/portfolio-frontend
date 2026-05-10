@@ -19,6 +19,8 @@ type EditableProfile = {
   linkedinUrl: string;
   skills: string[];
   availability: "Available" | "Not Available";
+  photoUrl?: string;
+  resumeUrl?: string;
 };
 
 const storageKey = "portfolio-admin-profile";
@@ -57,6 +59,36 @@ export default function AdminProfilePage() {
       }
     } catch {
       setData(readLocal());
+    }
+  }
+
+  async function handleDeletePhoto() {
+    if (!window.confirm("Delete profile photo?")) return;
+    try {
+      const response = await api.delete<Partial<EditableProfile>>("/api/admin/profile/photo");
+      const next = normalizeProfile(response.data || data);
+      setData(next);
+      saveLocal(next);
+      setToast({ message: "Photo deleted.", variant: "success" });
+    } catch {
+      setToast({ message: "Error deleting photo.", variant: "error" });
+    } finally {
+      window.setTimeout(() => setToast(null), 3500);
+    }
+  }
+
+  async function handleDeleteResume() {
+    if (!window.confirm("Delete resume?")) return;
+    try {
+      const response = await api.delete<Partial<EditableProfile>>("/api/admin/profile/resume");
+      const next = normalizeProfile(response.data || data);
+      setData(next);
+      saveLocal(next);
+      setToast({ message: "Resume deleted.", variant: "success" });
+    } catch {
+      setToast({ message: "Error deleting resume.", variant: "error" });
+    } finally {
+      window.setTimeout(() => setToast(null), 3500);
     }
   }
 
@@ -117,8 +149,33 @@ export default function AdminProfilePage() {
           <InputField label="Role/Title" name="role" defaultValue={data.role} required />
           <InputField label="Short Bio" name="shortBio" defaultValue={data.shortBio} />
           <InputField label="Long Bio" name="longBio" textarea defaultValue={data.longBio} />
-          <InputField label="Profile Photo" name="photo" type="file" accept="image/*" />
-          <InputField label="Resume PDF" name="resume" type="file" accept="application/pdf" />
+          
+          <div>
+            <InputField label="Profile Photo" name="photo" type="file" accept="image/*" />
+            {data.photoUrl && (
+              <div className="mt-3 flex items-center gap-4">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={data.photoUrl} alt="Profile preview" className="h-16 rounded-full border border-white/10" />
+                <button type="button" onClick={handleDeletePhoto} className="text-sm font-semibold text-red-400 hover:text-red-300">
+                  Delete Photo
+                </button>
+              </div>
+            )}
+          </div>
+
+          <div>
+            <InputField label="Resume PDF" name="resume" type="file" accept="application/pdf" />
+            {data.resumeUrl && (
+              <div className="mt-3 flex items-center gap-4">
+                <a href={data.resumeUrl} target="_blank" rel="noreferrer" className="text-sm font-semibold text-cyan-400 hover:underline">
+                  View Current Resume
+                </a>
+                <button type="button" onClick={handleDeleteResume} className="text-sm font-semibold text-red-400 hover:text-red-300">
+                  Delete Resume
+                </button>
+              </div>
+            )}
+          </div>
           <InputField label="Email" name="email" type="email" defaultValue={data.email} required />
           <InputField label="Phone" name="phone" defaultValue={data.phone} />
           <InputField label="GitHub URL" name="githubUrl" defaultValue={data.githubUrl} />

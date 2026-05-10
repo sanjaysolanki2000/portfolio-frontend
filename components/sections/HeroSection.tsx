@@ -1,16 +1,21 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Download } from "lucide-react";
+import { Download, Code2, BriefcaseBusiness, Mail } from "lucide-react";
 import { AnimatedButton } from "@/components/ui/AnimatedButton";
 import { Badge } from "@/components/ui/Badge";
 import { GlassCard } from "@/components/ui/GlassCard";
-import { profile, socialLinks } from "@/lib/data";
 
-const typedRoles = ["React Native Developer", "Flutter Developer", "Full Stack Developer"];
-const orbitItems = ["React", "Flutter", "Node", "MongoDB"];
+const typedRoles = ["React Native Developer", "Flutter Developer", "Node Js Developer", "Full Stack Developer"];
+const orbitItems = ["React", "Flutter", "Node Js", "MongoDB", "MySql", "Next Js"];
 
-export function HeroSection() {
+export function HeroSection({ profile }: { profile: any }) {
+  const socialLinks = [
+    { label: "GitHub", href: profile.githubUrl || profile.github, icon: Code2 },
+    { label: "LinkedIn", href: profile.linkedinUrl || profile.linkedin, icon: BriefcaseBusiness },
+    { label: "Email", href: `mailto:${profile.email}`, icon: Mail },
+  ].filter((link) => link.href);
+
   return (
     <section className="mesh-bg relative min-h-[calc(100vh-4rem)] overflow-hidden">
       <div className="absolute inset-0 opacity-30">
@@ -22,7 +27,7 @@ export function HeroSection() {
             {profile.availability}
           </Badge>
           <h1 className="max-w-4xl font-heading text-4xl font-bold leading-tight text-slate-50 light:text-slate-950 sm:text-6xl lg:text-7xl">
-            Hi, I&apos;m Sanjay Solanki
+            Hi, I&apos;m {profile.fullName || profile.name}
           </h1>
           <div className="mt-5 h-10 overflow-hidden text-xl font-semibold text-cyan-300 sm:text-2xl">
             <motion.div animate={{ y: ["0%", "-33.333%", "-66.666%", "0%"] }} transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}>
@@ -34,7 +39,7 @@ export function HeroSection() {
             </motion.div>
           </div>
           <p className="mt-6 max-w-2xl text-base leading-8 text-slate-300 light:text-slate-700 sm:text-lg">
-            3+ years building production-grade mobile and web apps across e-commerce, real-time tracking, AI-powered services, and certificate management.
+            {profile.shortBio || "3+ years building production-grade mobile and web apps across e-commerce, real-time tracking, AI-powered services, and certificate management."}
           </p>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
             <AnimatedButton href="/projects">View My Work</AnimatedButton>
@@ -65,7 +70,7 @@ export function HeroSection() {
               <span
                 key={item}
                 className="orbit absolute inline-flex h-16 w-16 items-center justify-center rounded-full border border-white/10 bg-[#111118]/80 text-xs font-bold text-slate-100 shadow-xl backdrop-blur-md light:border-violet-500/15 light:bg-white/90 light:text-slate-800"
-                style={{ animationDelay: `${index * -4}s` }}
+                style={{ animationDelay: `${index * -(16 / orbitItems.length)}s` }}
               >
                 {item}
               </span>
@@ -74,10 +79,7 @@ export function HeroSection() {
           <GlassCard className="relative z-10 flex aspect-square w-72 items-center justify-center rounded-[28%] border-cyan-300/20 bg-gradient-to-br from-violet-500/20 via-white/[0.05] to-cyan-400/20 p-7 sm:w-80">
             <div className="absolute inset-4 rounded-[28%] border border-white/10" />
             <div className="relative flex h-full w-full flex-col items-center justify-center rounded-[26%] bg-[#111118]/80 text-center light:bg-white/80">
-              <span className="font-heading text-7xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-violet-300 to-cyan-200 light:from-violet-600 light:to-cyan-700">
-                SS
-              </span>
-              <p className="mt-4 max-w-44 text-sm leading-6 text-slate-300 light:text-slate-600">Mobile apps, web dashboards, APIs, and integrations.</p>
+              <p className="mt-4 max-w-44 text-sm leading-6 text-slate-300 light:text-slate-600">Building mobile apps, Web portals, and Backend systems.</p>
             </div>
           </GlassCard>
         </motion.div>

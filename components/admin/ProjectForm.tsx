@@ -1,7 +1,7 @@
+import { useState, type FormEvent } from "react";
 import { InputField } from "@/components/ui/InputField";
 import { slugify } from "@/lib/utils";
 import type { Project } from "@/lib/data";
-import type { FormEvent } from "react";
 
 type EditableProject = Partial<Project> & {
   _id?: string;
@@ -15,12 +15,25 @@ type ProjectFormProps = {
 };
 
 export function ProjectForm({ project, loading, onSubmit, onCancel }: ProjectFormProps) {
+  const [existingScreenshots, setExistingScreenshots] = useState<string[]>(project?.screenshots || []);
+  const [deleteThumbnail, setDeleteThumbnail] = useState(false);
   const title = project?.title || "";
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
     formData.set("visible", formData.get("visible") === "on" ? "true" : "false");
+
+    if (existingScreenshots.length > 0) {
+      existingScreenshots.forEach((shot) => formData.append("existingScreenshots", shot));
+    } else {
+      formData.set("existingScreenshots", "");
+    }
+
+    if (deleteThumbnail) {
+      formData.set("deleteThumbnail", "true");
+    }
+
     onSubmit(formData);
   }
 
@@ -57,7 +70,44 @@ export function ProjectForm({ project, loading, onSubmit, onCancel }: ProjectFor
       <InputField label="Long Description" name="longDescription" textarea defaultValue={project?.longDescription || ""} required />
       <InputField label="Tech Stack" name="stack" defaultValue={project?.stack?.join(", ") || ""} required />
       <InputField label="Features" name="features" textarea defaultValue={project?.features?.join("\n") || ""} required />
-      <InputField label="Screenshots" name="screenshots" type="file" multiple />
+      
+      <div>
+        <InputField label="Thumbnail" name="thumbnail" type="file" accept="image/*" />
+        {project?.thumbnailUrl && !deleteThumbnail && (
+          <div className="mt-3 flex items-center gap-4">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={project.thumbnailUrl} alt="Thumbnail preview" className="h-16 rounded border border-white/10" />
+            <button type="button" onClick={() => setDeleteThumbnail(true)} className="text-sm font-semibold text-red-400 hover:text-red-300">
+              Delete Thumbnail
+            </button>
+          </div>
+        )}
+      </div>
+
+      <div>
+        <InputField label="Screenshots" name="screenshots" type="file" multiple accept="image/*" />
+        {existingScreenshots.length > 0 && (
+          <div className="mt-3 flex flex-wrap gap-3">
+            {existingScreenshots.map((shot, idx) => {
+              const url = project?.screenshotUrls?.[project?.screenshots?.indexOf(shot) ?? -1] || shot;
+              return (
+                <div key={shot} className="group relative">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={url} alt={`Screenshot ${idx}`} className="h-16 rounded border border-white/10 object-cover" />
+                  <button
+                    type="button"
+                    onClick={() => setExistingScreenshots((s) => s.filter((x) => x !== shot))}
+                    className="absolute -right-2 -top-2 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-xs font-bold text-white opacity-0 shadow transition group-hover:opacity-100"
+                    title="Delete screenshot"
+                  >
+                    X
+                  </button>
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </div>
       <InputField label="GitHub URL" name="githubUrl" defaultValue={project?.githubUrl || ""} />
       <InputField label="Live Demo URL" name="demoUrl" defaultValue={project?.demoUrl || ""} />
       <InputField label="Year" name="year" defaultValue={project?.year || new Date().getFullYear()} />

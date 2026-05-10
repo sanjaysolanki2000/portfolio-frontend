@@ -1,19 +1,34 @@
+import { notFound } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft, Code2, ExternalLink, Sparkles } from "lucide-react";
 import { Badge } from "@/components/ui/Badge";
 import { GlassCard } from "@/components/ui/GlassCard";
 import { ProjectCard } from "@/components/ui/ProjectCard";
 import { SectionWrapper } from "@/components/ui/SectionWrapper";
-import { projects } from "@/lib/data";
+import { getProjectBySlug, getProjects } from "@/lib/fetchData";
+import { projects as dummyProjects } from "@/lib/data";
 
-export function generateStaticParams() {
-  return projects.map((project) => ({ slug: project.slug }));
+export async function generateStaticParams() {
+  // Can fetch slugs from API or return empty array to rely on dynamic rendering
+  return [];
 }
 
-export default function ProjectDetailPage({ params }: { params: { slug: string } }) {
+export default async function ProjectDetailPage({ params }: { params: { slug: string } }) {
   const { slug } = params;
-  const project = projects.find((item) => item.slug === slug) ?? projects[0];
-  const related = projects.filter((item) => item.slug !== project.slug).slice(0, 3);
+  
+  const [projectData, allProjectsData] = await Promise.all([
+    getProjectBySlug(slug),
+    getProjects()
+  ]);
+
+  const project = projectData || dummyProjects.find((item) => item.slug === slug);
+  
+  if (!project) {
+    notFound();
+  }
+
+  const allProjects = allProjectsData.length > 0 ? allProjectsData : dummyProjects;
+  const related = allProjects.filter((item) => item.slug !== project.slug).slice(0, 3);
 
   return (
     <>
@@ -57,11 +72,20 @@ export default function ProjectDetailPage({ params }: { params: { slug: string }
             </ul>
           </GlassCard>
           <div className="mt-6 grid gap-4 sm:grid-cols-2">
-            {[1, 2].map((item) => (
-              <div key={item} className="aspect-[16/10] rounded-lg border border-white/10 bg-white/[0.04] p-4 light:border-violet-500/15 light:bg-white/75">
-                <div className="h-full rounded-md" style={{ background: `linear-gradient(135deg, ${project.accent}55, rgba(0,212,255,.18))` }} />
-              </div>
-            ))}
+            {project.screenshotUrls && project.screenshotUrls.length > 0 ? (
+              project.screenshotUrls.slice(0, 4).map((url, idx) => (
+                <div key={idx} className="aspect-[16/10] overflow-hidden rounded-lg border border-white/10 bg-white/[0.04] light:border-violet-500/15 light:bg-white/75">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={url} alt={`${project.title} screenshot ${idx + 1}`} className="h-full w-full object-cover" />
+                </div>
+              ))
+            ) : (
+              [1, 2].map((item) => (
+                <div key={item} className="aspect-[16/10] rounded-lg border border-white/10 bg-white/[0.04] p-4 light:border-violet-500/15 light:bg-white/75">
+                  <div className="h-full rounded-md" style={{ background: `linear-gradient(135deg, ${project.accent}55, rgba(0,212,255,.18))` }} />
+                </div>
+              ))
+            )}
           </div>
         </div>
         <aside className="lg:sticky lg:top-24 lg:self-start">

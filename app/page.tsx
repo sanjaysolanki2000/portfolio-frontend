@@ -4,12 +4,17 @@ import { TechMarquee } from "@/components/sections/TechMarquee";
 import { ProjectCard } from "@/components/ui/ProjectCard";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { SectionWrapper } from "@/components/ui/SectionWrapper";
-import { projects } from "@/lib/data";
+import { getProjects, getProfile } from "@/lib/fetchData";
+import { projects as dummyProjects, profile as dummyProfile } from "@/lib/data";
 
-export default function Home() {
+export default async function Home() {
+  const [projectsData, profileData] = await Promise.all([getProjects(), getProfile()]);
+  const projects = projectsData.length > 0 ? projectsData : dummyProjects;
+  const profile = profileData ? { ...dummyProfile, ...profileData } : dummyProfile;
+
   return (
     <>
-      <HeroSection />
+      <HeroSection profile={profile} />
       <StatsBar />
       <TechMarquee />
       <SectionWrapper id="projects">

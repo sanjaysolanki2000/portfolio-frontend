@@ -24,7 +24,7 @@ class AdminStore {
       localStorage.setItem("portfolio-admin", "true");
       return true;
     } catch {
-      if (process.env.NODE_ENV !== "production" && email === "sanjay.solanki1619@gmail.com" && password === "change_me_123") {
+      if (process.env.NODE_ENV !== "production" && email === "sanjaysolanki1619@gmail.com" && password === "change_me_123") {
         this.authenticated = true;
         localStorage.setItem("portfolio-admin", "true");
         return true;

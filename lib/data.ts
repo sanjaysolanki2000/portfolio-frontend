@@ -30,6 +30,10 @@ export type Project = {
   accent: string;
   demoUrl?: string;
   githubUrl?: string;
+  thumbnail?: string;
+  thumbnailUrl?: string;
+  screenshots?: string[];
+  screenshotUrls?: string[];
 };
 
 export const profile = {
@@ -37,7 +41,7 @@ export const profile = {
   role: "React Native | React.js | Flutter | Node.js | PHP Developer",
   location: "Bikaner, Rajasthan",
   availability: "Available for Remote Work",
-  email: "sanjay.solanki1619@gmail.com",
+  email: "sanjaysolanki1619@gmail.com",
   phone: "+91 7231859706",
   github: "https://github.com/sanjaysolanki2000",
   linkedin: "https://linkedin.com/in/sanjay-solanki-b41040250",
