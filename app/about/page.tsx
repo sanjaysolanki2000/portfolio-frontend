@@ -6,6 +6,8 @@ import { Timeline } from "@/components/ui/Timeline";
 import { getProfile } from "@/lib/fetchData";
 import { profile as dummyProfile } from "@/lib/data";
 
+export const dynamic = "force-dynamic";
+
 export default async function AboutPage() {
   const profileData = await getProfile();
   const profile = profileData ? { ...dummyProfile, ...profileData } : dummyProfile;

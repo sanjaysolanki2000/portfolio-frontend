@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft, Code2, ExternalLink, Sparkles } from "lucide-react";
@@ -5,13 +6,11 @@ import { Badge } from "@/components/ui/Badge";
 import { GlassCard } from "@/components/ui/GlassCard";
 import { ProjectCard } from "@/components/ui/ProjectCard";
 import { SectionWrapper } from "@/components/ui/SectionWrapper";
+import { ScreenshotGallery } from "@/components/ui/ScreenshotGallery";
 import { getProjectBySlug, getProjects } from "@/lib/fetchData";
 import { projects as dummyProjects } from "@/lib/data";
 
-export async function generateStaticParams() {
-  // Can fetch slugs from API or return empty array to rely on dynamic rendering
-  return [];
-}
+export const dynamic = "force-dynamic";
 
 export default async function ProjectDetailPage({ params }: { params: { slug: string } }) {
   const { slug } = params;
@@ -39,18 +38,25 @@ export default async function ProjectDetailPage({ params }: { params: { slug: st
             background: `radial-gradient(circle at 25% 20%, ${project.accent}80, transparent 30%), linear-gradient(135deg, rgba(10,10,15,.94), rgba(17,17,24,.84))`,
           }}
         />
-        <div className="relative mx-auto max-w-7xl px-5 py-24 sm:px-6 lg:px-8">
-          <Link href="/projects" className="mb-8 inline-flex items-center gap-2 text-sm font-semibold text-cyan-300 hover:text-cyan-100 light:text-cyan-700">
-            <ArrowLeft className="h-4 w-4" />
-            All Projects
-          </Link>
-          <h1 className="font-heading text-4xl font-bold text-slate-50 sm:text-6xl">{project.title}</h1>
-          <p className="mt-5 max-w-3xl text-lg leading-8 text-slate-300">{project.shortDescription}</p>
-          <div className="mt-6 flex flex-wrap gap-2">
-            {project.stack.map((tag) => (
-              <Badge key={tag}>{tag}</Badge>
-            ))}
+        <div className="relative mx-auto max-w-7xl px-5 py-24 sm:px-6 lg:px-8 grid gap-8 md:grid-cols-[1fr_360px] items-center">
+          <div>
+            <Link href="/projects" className="mb-8 inline-flex items-center gap-2 text-sm font-semibold text-cyan-300 hover:text-cyan-100 light:text-cyan-700">
+              <ArrowLeft className="h-4 w-4" />
+              All Projects
+            </Link>
+            <h1 className="font-heading text-4xl font-bold text-slate-50 sm:text-6xl">{project.title}</h1>
+            <p className="mt-5 max-w-3xl text-lg leading-8 text-slate-300">{project.shortDescription}</p>
+            <div className="mt-6 flex flex-wrap gap-2">
+              {project.stack.map((tag) => (
+                <Badge key={tag}>{tag}</Badge>
+              ))}
+            </div>
           </div>
+          {project.thumbnailUrl && (
+            <div className="relative mx-auto aspect-[16/10] w-full max-w-[360px] overflow-hidden rounded-xl border border-white/10 shadow-2xl bg-white/[0.04]">
+              <img src={project.thumbnailUrl} alt={`${project.title} thumbnail`} className="h-full w-full object-cover" />
+            </div>
+          )}
         </div>
       </section>
 
@@ -71,22 +77,21 @@ export default async function ProjectDetailPage({ params }: { params: { slug: st
               ))}
             </ul>
           </GlassCard>
-          <div className="mt-6 grid gap-4 sm:grid-cols-2">
-            {project.screenshotUrls && project.screenshotUrls.length > 0 ? (
-              project.screenshotUrls.slice(0, 4).map((url, idx) => (
-                <div key={idx} className="aspect-[16/10] overflow-hidden rounded-lg border border-white/10 bg-white/[0.04] light:border-violet-500/15 light:bg-white/75">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={url} alt={`${project.title} screenshot ${idx + 1}`} className="h-full w-full object-cover" />
-                </div>
-              ))
-            ) : (
-              [1, 2].map((item) => (
+          {project.screenshotUrls && project.screenshotUrls.length > 0 ? (
+            <ScreenshotGallery
+              screenshotUrls={project.screenshotUrls}
+              accentColor={project.accent}
+              projectTitle={project.title}
+            />
+          ) : (
+            <div className="mt-6 grid gap-4 sm:grid-cols-2">
+              {[1, 2].map((item) => (
                 <div key={item} className="aspect-[16/10] rounded-lg border border-white/10 bg-white/[0.04] p-4 light:border-violet-500/15 light:bg-white/75">
                   <div className="h-full rounded-md" style={{ background: `linear-gradient(135deg, ${project.accent}55, rgba(0,212,255,.18))` }} />
                 </div>
-              ))
-            )}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
         <aside className="lg:sticky lg:top-24 lg:self-start">
           <GlassCard className="p-6">

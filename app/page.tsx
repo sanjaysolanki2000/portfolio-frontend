@@ -7,6 +7,8 @@ import { SectionWrapper } from "@/components/ui/SectionWrapper";
 import { getProjects, getProfile } from "@/lib/fetchData";
 import { projects as dummyProjects, profile as dummyProfile } from "@/lib/data";
 
+export const dynamic = "force-dynamic";
+
 export default async function Home() {
   const [projectsData, profileData] = await Promise.all([getProjects(), getProfile()]);
   const projects = projectsData.length > 0 ? projectsData : dummyProjects;

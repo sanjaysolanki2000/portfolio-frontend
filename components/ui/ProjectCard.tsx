@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import { motion } from "framer-motion";
@@ -12,28 +13,38 @@ export function ProjectCard({ project }: { project: Project }) {
     <motion.article whileHover={{ y: -6 }} transition={{ type: "spring", stiffness: 260, damping: 20 }}>
       <GlassCard className="group flex h-full flex-col overflow-hidden">
         <div className="relative aspect-[16/10] overflow-hidden border-b border-white/10 light:border-violet-500/10">
-          <div
-            className="absolute inset-0"
-            style={{
-              background: `radial-gradient(circle at 30% 30%, ${project.accent}88, transparent 34%), linear-gradient(135deg, ${project.accent}40, rgba(0,212,255,.24), rgba(10,10,15,.92))`,
-            }}
-          />
-          <div className="absolute inset-5 rounded-lg border border-white/15 bg-black/20 p-4 shadow-2xl backdrop-blur-sm">
-            <div className="mb-4 flex gap-2">
-              <span className="h-2.5 w-2.5 rounded-full bg-red-300" />
-              <span className="h-2.5 w-2.5 rounded-full bg-yellow-300" />
-              <span className="h-2.5 w-2.5 rounded-full bg-emerald-300" />
-            </div>
-            <div className="space-y-3">
-              <div className="h-3 w-2/3 rounded-full bg-white/40" />
-              <div className="h-3 w-full rounded-full bg-white/20" />
-              <div className="grid grid-cols-3 gap-2 pt-4">
-                <span className="h-12 rounded-md bg-white/15" />
-                <span className="h-12 rounded-md bg-white/10" />
-                <span className="h-12 rounded-md bg-white/15" />
+          {project.thumbnailUrl ? (
+            <img
+              src={project.thumbnailUrl}
+              alt={`${project.title} thumbnail`}
+              className="absolute inset-0 h-full w-full object-cover transition-transform duration-300 group-hover:scale-103"
+            />
+          ) : (
+            <>
+              <div
+                className="absolute inset-0"
+                style={{
+                  background: `radial-gradient(circle at 30% 30%, ${project.accent}88, transparent 34%), linear-gradient(135deg, ${project.accent}40, rgba(0,212,255,.24), rgba(10,10,15,.92))`,
+                }}
+              />
+              <div className="absolute inset-5 rounded-lg border border-white/15 bg-black/20 p-4 shadow-2xl backdrop-blur-sm">
+                <div className="mb-4 flex gap-2">
+                  <span className="h-2.5 w-2.5 rounded-full bg-red-300" />
+                  <span className="h-2.5 w-2.5 rounded-full bg-yellow-300" />
+                  <span className="h-2.5 w-2.5 rounded-full bg-emerald-300" />
+                </div>
+                <div className="space-y-3">
+                  <div className="h-3 w-2/3 rounded-full bg-white/40" />
+                  <div className="h-3 w-full rounded-full bg-white/20" />
+                  <div className="grid grid-cols-3 gap-2 pt-4">
+                    <span className="h-12 rounded-md bg-white/15" />
+                    <span className="h-12 rounded-md bg-white/10" />
+                    <span className="h-12 rounded-md bg-white/15" />
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
+            </>
+          )}
         </div>
         <div className="flex flex-1 flex-col p-5">
           <div className="mb-3 flex flex-wrap gap-2">
