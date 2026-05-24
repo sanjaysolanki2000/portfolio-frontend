@@ -271,7 +271,7 @@ function formDataToProject(formData: FormData, current?: AdminProject | null): A
   const title = `${formData.get("title") || ""}`.trim();
   const categoryVals = formData.getAll("category");
   const filterVals = formData.getAll("filter");
-  
+
   return {
     _id: current?._id,
     title,
@@ -297,7 +297,7 @@ function projectToFormData(project: AdminProject) {
   const formData = new FormData();
   formData.set("title", project.title);
   formData.set("slug", project.slug);
-  
+
   if (Array.isArray(project.category)) {
     project.category.forEach((c) => formData.append("category", c));
   } else {

@@ -4,7 +4,7 @@ import { makeAutoObservable, runInAction } from "mobx";
 import { api } from "@/lib/api";
 import { projects, type Project } from "@/lib/data";
 
-export type ProjectFilter = "All" | "React Native" | "Flutter" | "React.js" | "PHP";
+export type ProjectFilter = "All" | "React Native" | "Flutter" | "React.js" | "Node Js" | "PHP";
 
 class ProjectStore {
   projects: Project[] = projects;
@@ -16,7 +16,7 @@ class ProjectStore {
   }
 
   get filters(): ProjectFilter[] {
-    return ["All", "React Native", "Flutter", "React.js", "PHP"];
+    return ["All", "React Native", "Flutter", "React.js", "Node Js", "PHP"];
   }
 
   get filter() {
