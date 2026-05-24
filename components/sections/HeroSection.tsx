@@ -64,19 +64,19 @@ export function HeroSection({ profile }: { profile: any }) {
         </motion.div>
 
         <motion.div initial={{ opacity: 0, scale: 0.94 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.7, delay: 0.1 }} className="relative mx-auto flex w-full max-w-lg items-center justify-center py-12">
-          <div className="absolute h-[25rem] w-[25rem] rounded-full border border-cyan-300/15" />
-          <div className="absolute z-20 hidden h-[25rem] w-[25rem] items-center justify-center sm:flex">
+          <div className="absolute h-[16rem] w-[16rem] sm:h-[25rem] sm:w-[25rem] rounded-full border border-cyan-300/15" />
+          <div className="absolute z-20 flex h-[16rem] w-[16rem] sm:h-[25rem] sm:w-[25rem] items-center justify-center">
             {orbitItems.map((item, index) => (
               <span
                 key={item}
-                className="orbit absolute inline-flex h-16 w-16 items-center justify-center rounded-full border border-white/10 bg-[#111118]/80 text-xs font-bold text-slate-100 shadow-xl backdrop-blur-md light:border-violet-500/15 light:bg-white/90 light:text-slate-800"
+                className="orbit absolute inline-flex h-12 w-12 sm:h-16 sm:w-16 items-center justify-center rounded-full border border-white/10 bg-[#111118]/80 text-[10px] sm:text-xs font-bold text-slate-100 shadow-xl backdrop-blur-md light:border-violet-500/15 light:bg-white/90 light:text-slate-800"
                 style={{ animationDelay: `${index * -(16 / orbitItems.length)}s` }}
               >
                 {item}
               </span>
             ))}
           </div>
-          <GlassCard className="relative z-10 flex aspect-square w-72 items-center justify-center rounded-[28%] border-cyan-300/20 bg-gradient-to-br from-violet-500/20 via-white/[0.05] to-cyan-400/20 p-7 sm:w-80">
+          <GlassCard className="relative z-10 flex aspect-square w-56 sm:w-80 items-center justify-center rounded-[28%] border-cyan-300/20 bg-gradient-to-br from-violet-500/20 via-white/[0.05] to-cyan-400/20 p-5 sm:p-7">
             <div className="absolute inset-4 rounded-[28%] border border-white/10" />
             <div className="relative flex h-full w-full flex-col items-center justify-center rounded-[26%] bg-[#111118]/80 text-center light:bg-white/80">
               <p className="mt-4 max-w-44 text-sm leading-6 text-slate-300 light:text-slate-600">Building mobile apps, Web portals, and Backend systems.</p>

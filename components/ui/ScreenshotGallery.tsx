@@ -14,6 +14,16 @@ type ScreenshotGalleryProps = {
 export function ScreenshotGallery({ screenshotUrls, accentColor, projectTitle }: ScreenshotGalleryProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
+  const [aspectRatios, setAspectRatios] = useState<Record<string, "portrait" | "landscape">>({});
+
+  const handleImageLoad = (url: string, e: React.SyntheticEvent<HTMLImageElement>) => {
+    const img = e.currentTarget;
+    const ratio = img.naturalWidth / img.naturalHeight;
+    setAspectRatios((prev) => ({
+      ...prev,
+      [url]: ratio < 1.0 ? "portrait" : "landscape",
+    }));
+  };
 
   const openModal = (index: number) => {
     setActiveIndex(index);
@@ -45,26 +55,32 @@ export function ScreenshotGallery({ screenshotUrls, accentColor, projectTitle }:
 
   return (
     <>
-      <div className="mt-6 grid gap-4 sm:grid-cols-2">
-        {screenshotUrls.map((url, idx) => (
-          <div
-            key={idx}
-            onClick={() => openModal(idx)}
-            className="group relative aspect-[16/10] cursor-pointer overflow-hidden rounded-lg border border-white/10 bg-white/[0.04] transition-all duration-300 hover:border-cyan-300/40 hover:shadow-lg hover:shadow-cyan-400/5 light:border-violet-500/15 light:bg-white/75"
-          >
-            <img
-              src={url}
-              alt={`${projectTitle} screenshot ${idx + 1}`}
-              className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-102"
-            />
-            {/* Hover overlay with click instructions */}
-            <div className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 backdrop-blur-[2px] transition-opacity duration-300 group-hover:opacity-100">
-              <span className="rounded-full bg-white/10 px-4 py-2 text-xs font-semibold text-white border border-white/20 shadow-md">
-                Click to Zoom
-              </span>
+      <div className="mt-6 grid gap-6 sm:grid-cols-2 md:grid-cols-3 items-start">
+        {screenshotUrls.map((url, idx) => {
+          const isPortrait = aspectRatios[url] === "portrait";
+          return (
+            <div
+              key={idx}
+              onClick={() => openModal(idx)}
+              className={`group relative cursor-pointer overflow-hidden rounded-xl border border-white/10 bg-white/[0.04] transition-all duration-300 hover:border-cyan-300/40 hover:shadow-lg hover:shadow-cyan-400/5 light:border-violet-500/15 light:bg-white/75 ${
+                isPortrait ? "aspect-[9/16] max-w-[280px] mx-auto w-full" : "aspect-[16/10] w-full"
+              }`}
+            >
+              <img
+                src={url}
+                onLoad={(e) => handleImageLoad(url, e)}
+                alt={`${projectTitle} screenshot ${idx + 1}`}
+                className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-102"
+              />
+              {/* Hover overlay with click instructions */}
+              <div className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 backdrop-blur-[2px] transition-opacity duration-300 group-hover:opacity-100">
+                <span className="rounded-full bg-white/10 px-4 py-2 text-xs font-semibold text-white border border-white/20 shadow-md">
+                  Click to Zoom
+                </span>
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
       <AnimatePresence>

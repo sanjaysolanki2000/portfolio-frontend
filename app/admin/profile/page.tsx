@@ -143,64 +143,84 @@ export default function AdminProfilePage() {
 
   return (
     <AdminGuard title="Profile">
-      <GlassCard className="max-w-3xl p-6">
-        <form key={JSON.stringify(data)} onSubmit={onSubmit} className="grid gap-5">
-          <InputField label="Full Name" name="fullName" defaultValue={data.fullName} required />
-          <InputField label="Role/Title" name="role" defaultValue={data.role} required />
-          <InputField label="Short Bio" name="shortBio" defaultValue={data.shortBio} />
-          <InputField label="Long Bio" name="longBio" textarea defaultValue={data.longBio} />
-          
-          <div>
-            <InputField label="Profile Photo" name="photo" type="file" accept="image/*" />
-            {data.photoUrl && (
-              <div className="mt-3 flex items-center gap-4">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={data.photoUrl} alt="Profile preview" className="h-16 rounded-full border border-white/10" />
-                <button type="button" onClick={handleDeletePhoto} className="text-sm font-semibold text-red-400 hover:text-red-300">
-                  Delete Photo
-                </button>
+      <form key={JSON.stringify(data)} onSubmit={onSubmit} className="space-y-6">
+        <div className="grid gap-6 lg:grid-cols-2">
+          {/* Left Column: About & Professional Bio */}
+          <GlassCard className="p-6 space-y-5">
+            <h2 className="font-heading text-lg font-bold text-cyan-300 light:text-cyan-700 border-b border-white/10 pb-3 light:border-violet-500/10">
+              Professional Biography
+            </h2>
+            <InputField label="Full Name" name="fullName" defaultValue={data.fullName} required />
+            <InputField label="Role/Title" name="role" defaultValue={data.role} required />
+            <InputField label="Short Bio" name="shortBio" defaultValue={data.shortBio} />
+            <InputField label="Long Bio" name="longBio" textarea defaultValue={data.longBio} />
+            
+            <div className="grid gap-4 sm:grid-cols-2 pt-2">
+              <div>
+                <InputField label="Profile Photo" name="photo" type="file" accept="image/*" />
+                {data.photoUrl && (
+                  <div className="mt-3 flex items-center gap-3">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={data.photoUrl} alt="Profile preview" className="h-12 w-12 rounded-full border border-white/10 object-cover" />
+                    <button type="button" onClick={handleDeletePhoto} className="text-xs font-semibold text-red-400 hover:text-red-300 cursor-pointer">
+                      Delete Photo
+                    </button>
+                  </div>
+                )}
               </div>
-            )}
-          </div>
 
-          <div>
-            <InputField label="Resume PDF" name="resume" type="file" accept="application/pdf" />
-            {data.resumeUrl && (
-              <div className="mt-3 flex items-center gap-4">
-                <a href={data.resumeUrl} target="_blank" rel="noreferrer" className="text-sm font-semibold text-cyan-400 hover:underline">
-                  View Current Resume
-                </a>
-                <button type="button" onClick={handleDeleteResume} className="text-sm font-semibold text-red-400 hover:text-red-300">
-                  Delete Resume
-                </button>
+              <div>
+                <InputField label="Resume PDF" name="resume" type="file" accept="application/pdf" />
+                {data.resumeUrl && (
+                  <div className="mt-3 flex flex-col gap-1">
+                    <a href={data.resumeUrl} target="_blank" rel="noreferrer" className="text-xs font-semibold text-cyan-400 hover:underline">
+                      View Current Resume
+                    </a>
+                    <button type="button" onClick={handleDeleteResume} className="text-left text-xs font-semibold text-red-400 hover:text-red-300 cursor-pointer">
+                      Delete Resume
+                    </button>
+                  </div>
+                )}
               </div>
-            )}
-          </div>
-          <InputField label="Email" name="email" type="email" defaultValue={data.email} required />
-          <InputField label="Phone" name="phone" defaultValue={data.phone} />
-          <InputField label="GitHub URL" name="githubUrl" defaultValue={data.githubUrl} />
-          <InputField label="LinkedIn URL" name="linkedinUrl" defaultValue={data.linkedinUrl} />
-          <InputField label="Skills" name="skills" defaultValue={data.skills.join(", ")} />
-          <label className="grid gap-2 text-xs font-medium text-slate-400 light:text-slate-600">
-            Availability
-            <select
-              name="availability"
-              defaultValue={data.availability}
-              className="rounded-lg border border-white/10 bg-white/[0.04] px-4 py-3 text-sm text-slate-50 outline-none light:border-violet-500/15 light:bg-white/75 light:text-slate-950"
-            >
-              <option>Available</option>
-              <option>Not Available</option>
-            </select>
-          </label>
+            </div>
+          </GlassCard>
+
+          {/* Right Column: Contact & Links */}
+          <GlassCard className="p-6 space-y-5">
+            <h2 className="font-heading text-lg font-bold text-cyan-300 light:text-cyan-700 border-b border-white/10 pb-3 light:border-violet-500/10">
+              Contact & Social Channels
+            </h2>
+            <InputField label="Email" name="email" type="email" defaultValue={data.email} required />
+            <InputField label="Phone" name="phone" defaultValue={data.phone} />
+            <InputField label="GitHub URL" name="githubUrl" defaultValue={data.githubUrl} />
+            <InputField label="LinkedIn URL" name="linkedinUrl" defaultValue={data.linkedinUrl} />
+            <InputField label="Skills (comma separated)" name="skills" defaultValue={data.skills.join(", ")} />
+            
+            <label className="grid gap-2 text-xs font-medium text-slate-400 light:text-slate-600">
+              Availability Status
+              <select
+                name="availability"
+                defaultValue={data.availability}
+                className="rounded-lg border border-white/10 bg-white/[0.04] px-4 py-3 text-sm text-slate-50 outline-none light:border-violet-500/15 light:bg-white/75 light:text-slate-950"
+              >
+                <option>Available</option>
+                <option>Not Available</option>
+              </select>
+            </label>
+          </GlassCard>
+        </div>
+
+        {/* Form Action Bar */}
+        <GlassCard className="p-4 flex justify-end gap-3">
           <button
             type="submit"
             disabled={loading}
-            className="rounded-full bg-gradient-to-r from-violet-500 to-cyan-400 px-5 py-3 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-60"
+            className="rounded-full bg-gradient-to-r from-violet-500 to-cyan-400 px-6 py-3 text-sm font-semibold text-white cursor-pointer disabled:cursor-not-allowed disabled:opacity-60 hover:shadow-lg hover:shadow-cyan-500/20 active:scale-98 transition duration-200"
           >
-            {loading ? "Saving..." : "Save Changes"}
+            {loading ? "Saving Changes..." : "Save Profile Details"}
           </button>
-        </form>
-      </GlassCard>
+        </GlassCard>
+      </form>
       {toast ? <Toast message={toast.message} variant={toast.variant} /> : null}
     </AdminGuard>
   );

@@ -8,7 +8,7 @@ export type ProjectFilter = "All" | "React Native" | "Flutter" | "React.js" | "P
 
 class ProjectStore {
   projects: Project[] = projects;
-  filter: ProjectFilter = "All";
+  selectedFilters: ProjectFilter[] = ["All"];
   loading = false;
 
   constructor() {
@@ -19,16 +19,35 @@ class ProjectStore {
     return ["All", "React Native", "Flutter", "React.js", "PHP"];
   }
 
+  get filter() {
+    return this.selectedFilters.includes("All") ? "All" : this.selectedFilters[0] || "All";
+  }
+
   get visibleProjects() {
     const sorted = [...this.projects].filter((project) => project.visible).sort((a, b) => a.order - b.order);
-    if (this.filter === "All") {
+    if (this.selectedFilters.includes("All")) {
       return sorted;
     }
-    return sorted.filter((project) => project.filter === this.filter);
+    return sorted.filter((project) => {
+      const projFilters = Array.isArray(project.filter) ? project.filter : [project.filter];
+      return projFilters.some((f) => this.selectedFilters.includes(f as ProjectFilter));
+    });
   }
 
   setFilter(filter: ProjectFilter) {
-    this.filter = filter;
+    if (filter === "All") {
+      this.selectedFilters = ["All"];
+    } else {
+      this.selectedFilters = this.selectedFilters.filter((f) => f !== "All");
+      if (this.selectedFilters.includes(filter)) {
+        this.selectedFilters = this.selectedFilters.filter((f) => f !== filter);
+        if (this.selectedFilters.length === 0) {
+          this.selectedFilters = ["All"];
+        }
+      } else {
+        this.selectedFilters.push(filter);
+      }
+    }
   }
 
   async loadProjects() {

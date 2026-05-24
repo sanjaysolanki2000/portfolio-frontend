@@ -18,8 +18,8 @@ export type ProjectCategory = "Mobile" | "Web" | "Admin Panel";
 export type Project = {
   title: string;
   slug: string;
-  category: ProjectCategory;
-  filter: "React Native" | "Flutter" | "React.js" | "PHP";
+  category: ProjectCategory | ProjectCategory[] | string | string[];
+  filter: ("React Native" | "Flutter" | "React.js" | "PHP")[] | string[] | string;
   shortDescription: string;
   longDescription: string;
   stack: string[];
@@ -30,6 +30,8 @@ export type Project = {
   accent: string;
   demoUrl?: string;
   githubUrl?: string;
+  androidUrl?: string;
+  iosUrl?: string;
   thumbnail?: string;
   thumbnailUrl?: string;
   screenshots?: string[];

@@ -24,7 +24,7 @@ const ProjectsPage = observer(function ProjectsPage() {
             onClick={() => projectStore.setFilter(filter)}
             className={cn(
               "rounded-full border px-4 py-2 text-sm font-semibold transition",
-              projectStore.filter === filter
+              projectStore.selectedFilters.includes(filter)
                 ? "border-cyan-300 bg-cyan-300/15 text-cyan-100 light:text-cyan-700"
                 : "border-white/10 bg-white/[0.04] text-slate-300 hover:border-cyan-300/40 light:border-violet-500/15 light:bg-white/75 light:text-slate-700",
             )}

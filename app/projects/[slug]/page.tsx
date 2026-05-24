@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft, Code2, ExternalLink, Sparkles } from "lucide-react";
+import { ArrowLeft, Code2, ExternalLink, Sparkles, Smartphone, Play } from "lucide-react";
 import { Badge } from "@/components/ui/Badge";
 import { GlassCard } from "@/components/ui/GlassCard";
 import { ProjectCard } from "@/components/ui/ProjectCard";
@@ -64,7 +64,7 @@ export default async function ProjectDetailPage({ params }: { params: { slug: st
         <div>
           <GlassCard className="p-6">
             <h2 className="font-heading text-2xl font-bold text-slate-50 light:text-slate-950">Overview</h2>
-            <p className="mt-4 leading-8 text-slate-300 light:text-slate-700">{project.longDescription}</p>
+            <p className="mt-4 leading-8 text-slate-300 light:text-slate-700 whitespace-pre-line">{project.longDescription}</p>
           </GlassCard>
           <GlassCard className="mt-6 p-6">
             <h2 className="font-heading text-2xl font-bold text-slate-50 light:text-slate-950">Features</h2>
@@ -99,7 +99,9 @@ export default async function ProjectDetailPage({ params }: { params: { slug: st
             <dl className="mt-5 space-y-4 text-sm">
               <div>
                 <dt className="text-slate-500">Category</dt>
-                <dd className="mt-1 text-slate-200 light:text-slate-800">{project.category}</dd>
+                <dd className="mt-1 text-slate-200 light:text-slate-800">
+                  {Array.isArray(project.category) ? project.category.join(", ") : project.category}
+                </dd>
               </div>
               <div>
                 <dt className="text-slate-500">Year</dt>
@@ -115,14 +117,30 @@ export default async function ProjectDetailPage({ params }: { params: { slug: st
               </div>
             </dl>
             <div className="mt-6 grid gap-3">
-              <a href={project.demoUrl || "#"} className="inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-violet-500 to-cyan-400 px-4 py-3 text-sm font-semibold text-white">
-                <ExternalLink className="h-4 w-4" />
-                Live Demo
-              </a>
-              <a href={project.githubUrl || "#"} className="inline-flex items-center justify-center gap-2 rounded-full border border-white/10 px-4 py-3 text-sm font-semibold text-slate-200 light:border-violet-500/15 light:text-slate-800">
-                <Code2 className="h-4 w-4" />
-                GitHub Repo
-              </a>
+              {project.demoUrl && (
+                <a href={project.demoUrl} target="_blank" rel="noreferrer" className="inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-violet-500 to-cyan-400 px-4 py-3 text-sm font-semibold text-white cursor-pointer hover:shadow-lg hover:shadow-cyan-500/20 active:scale-98 transition duration-200">
+                  <ExternalLink className="h-4 w-4" />
+                  Live Demo
+                </a>
+              )}
+              {project.githubUrl && (
+                <a href={project.githubUrl} target="_blank" rel="noreferrer" className="inline-flex items-center justify-center gap-2 rounded-full border border-white/10 px-4 py-3 text-sm font-semibold text-slate-200 light:border-violet-500/15 light:text-slate-800 cursor-pointer hover:bg-white/[0.05] transition duration-200">
+                  <Code2 className="h-4 w-4" />
+                  GitHub Repo
+                </a>
+              )}
+              {project.androidUrl && (
+                <a href={project.androidUrl} target="_blank" rel="noreferrer" className="inline-flex items-center justify-center gap-2 rounded-full bg-emerald-500/20 border border-emerald-500/30 px-4 py-3 text-sm font-semibold text-emerald-300 cursor-pointer hover:bg-emerald-500/30 transition duration-200">
+                  <Play className="h-4 w-4" />
+                  Android App
+                </a>
+              )}
+              {project.iosUrl && (
+                <a href={project.iosUrl} target="_blank" rel="noreferrer" className="inline-flex items-center justify-center gap-2 rounded-full bg-indigo-500/20 border border-indigo-500/30 px-4 py-3 text-sm font-semibold text-indigo-300 cursor-pointer hover:bg-indigo-500/30 transition duration-200">
+                  <Smartphone className="h-4 w-4" />
+                  iOS App
+                </a>
+              )}
             </div>
           </GlassCard>
         </aside>
